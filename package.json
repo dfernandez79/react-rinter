@@ -1,0 +1,26 @@
+{
+  "name": "react-rinter",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Diego Fernandez <diegof79@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "create-subscription": "^16.5.2",
+    "lodash": "^4.17.11",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
+    "rinter": "^2.0.0-4",
+    "rxjs": "^6.3.3"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
+    "parcel-bundler": "^1.10.1",
+    "rimraf": "^2.6.2"
+  },
+  "scripts": {
+    "clean": "rimraf .cache dist",
+    "serve:counter": "parcel serve examples/counter/index.html",
+    "serve:todo": "parcel serve examples/todo/index.html"
+  }
+}

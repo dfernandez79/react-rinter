@@ -1,0 +1,17 @@
+{
+  "presets": [
+    [
+      "env",
+      {
+        "targets": {
+          "browsers": [
+            "last 2 Chrome versions",
+            "Safari >= 10.1",
+            "Edge >= 16",
+            "Firefox > 52"
+          ]
+        }
+      }
+    ]
+  ]
+}
