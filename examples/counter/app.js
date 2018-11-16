@@ -1,23 +1,35 @@
 import React from 'react';
 import { render } from 'react-dom';
+import DefaultController, { debug } from 'rinter';
 
-import ControllerSubscription from '../../src';
-import CounterController from '.';
+import { Provider, Consumer } from '../../src';
 
-const counter = new CounterController();
+export default class CounterController extends DefaultController {
+  increment() {
+    this.assign({ count: this.state.count + 1 });
+  }
+
+  decrement() {
+    this.assign({ count: this.state.count - 1 });
+  }
+}
+
+const counter = debug(new CounterController({ count: 0 }));
 
 const App = () => (
-  <ControllerSubscription source={counter}>
-    {value => (
-      <div>
-        Clicked: {value.count} times
+  <Provider controller={counter}>
+    <Consumer>
+      {(state, controller) => (
         <div>
-          <button onClick={() => counter.increment()}>+</button>
-          <button onClick={() => counter.decrement()}>-</button>
+          Clicked: {state.count} times
+          <div>
+            <button onClick={() => controller.increment()}>+</button>
+            <button onClick={() => controller.decrement()}>-</button>
+          </div>
         </div>
-      </div>
-    )}
-  </ControllerSubscription>
+      )}
+    </Consumer>
+  </Provider>
 );
 
 render(<App />, document.getElementById('app'));

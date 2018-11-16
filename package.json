@@ -1,25 +1,55 @@
 {
   "name": "react-rinter",
-  "version": "1.0.0",
-  "main": "index.js",
+  "version": "0.1.0",
+  "description": "React components for Rinter",
+  "main": "lib/index.js",
+  "module": "lib-esm/index.js",
+  "repository": "https://github.com/dfernandez79/react-rinter.git",
   "author": "Diego Fernandez <diegof79@gmail.com>",
   "license": "MIT",
+  "sideEffects": false,
+  "keywords": [
+    "state",
+    "predictable",
+    "reducer",
+    "rxjs",
+    "flux",
+    "elm",
+    "react",
+    "rinter"
+  ],
+  "peerDependencies": {
+    "rxjs": "6.x"
+  },
   "dependencies": {
-    "create-subscription": "^16.5.2",
-    "lodash": "^4.17.11",
-    "react": "^16.5.2",
-    "react-dom": "^16.5.2",
-    "rinter": "^2.0.0-4",
-    "rxjs": "^6.3.3"
+    "create-subscription": "^16.6.0",
+    "react": "^16.6.0",
+    "react-dom": "^16.6.0",
+    "rinter": "^2.0.0-9"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
     "babel-preset-env": "^1.7.0",
-    "parcel-bundler": "^1.10.1",
-    "rimraf": "^2.6.2"
+    "cpy-cli": "^2.0.0",
+    "eslint": "^5.6.1",
+    "lodash": "^4.17.11",
+    "np": "^3.0.4",
+    "npm-run-all": "^4.1.3",
+    "parcel-bundler": "^1.10.3",
+    "rimraf": "^2.6.2",
+    "rxjs": "^6.3.3"
   },
   "scripts": {
-    "clean": "rimraf .cache dist",
+    "build": "npm-run-all build:node build:esm",
+    "build:node": "babel src -d lib",
+    "build:esm": "cpy '**/*.js' '!**/*.test.js' --cwd=src ../lib-esm",
+    "test": "ava",
+    "coverage": "npm-run-all build:node coverage:run",
+    "coverage:run": "nyc --reporter=html ava",
+    "clean": "rimraf lib lib-esm *.tgz coverage .nyc_output *.log .cache dist",
+    "lint": "eslint src",
+    "release": "npm-run-all clean lint build release:np",
+    "release:np": "np",
     "serve:counter": "parcel serve examples/counter/index.html",
     "serve:todo": "parcel serve examples/todo/index.html"
   }
