@@ -22,29 +22,31 @@
     "rxjs": "6.x"
   },
   "dependencies": {
-    "create-subscription": "^16.6.0",
-    "react": "^16.6.0",
-    "react-dom": "^16.6.0",
-    "rinter": "^2.0.0-9"
+    "create-subscription": "^16.8.6",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "rinter": "^2.0.0-11"
   },
   "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-preset-env": "^1.7.0",
+    "@babel/cli": "^7.4.3",
+    "@babel/core": "^7.4.3",
+    "@babel/preset-env": "^7.4.3",
     "cpy-cli": "^2.0.0",
-    "eslint": "^5.6.1",
+    "eslint": "^5.16.0",
+    "eslint-plugin-react": "^7.12.4",
     "lodash": "^4.17.11",
-    "np": "^3.0.4",
-    "npm-run-all": "^4.1.3",
-    "parcel-bundler": "^1.10.3",
-    "rimraf": "^2.6.2",
-    "rxjs": "^6.3.3"
+    "np": "^4.0.2",
+    "npm-run-all": "^4.1.5",
+    "parcel-bundler": "^1.12.3",
+    "rimraf": "^2.6.3",
+    "rxjs": "^6.4.0"
   },
   "scripts": {
-    "build": "npm-run-all build:node build:esm",
-    "build:node": "babel src -d lib",
+    "build": "npm-run-all build:lib build:esm",
+    "build:lib": "babel src -d lib",
     "build:esm": "cpy '**/*.js' '!**/*.test.js' --cwd=src ../lib-esm",
     "test": "ava",
-    "coverage": "npm-run-all build:node coverage:run",
+    "coverage": "npm-run-all build:lib coverage:run",
     "coverage:run": "nyc --reporter=html ava",
     "clean": "rimraf lib lib-esm *.tgz coverage .nyc_output *.log .cache dist",
     "lint": "eslint src",

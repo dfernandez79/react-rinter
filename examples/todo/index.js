@@ -1,5 +1,5 @@
-import { DefaultController } from 'rinter';
 import { maxBy, isNumber } from 'lodash';
+import { controller } from 'rinter';
 
 const nextId = list => {
   const maxIdItem = maxBy(list, 'id');
@@ -8,24 +8,19 @@ const nextId = list => {
     : 1;
 };
 
-export default class TodoController extends DefaultController {
-  constructor(initialValue = { draft: '', list: [] }) {
-    super(initialValue);
-  }
+export default controller({
+  initialState: { draft: '', list: [] },
+  mutators: {
+    changeDraft: (state, text) => ({ ...state, draft: text }),
 
-  changeDraft(text) {
-    this.assign({ draft: text });
-  }
+    add: (state, text) => ({
+      ...state,
+      list: [...state.list, { id: nextId(state.list), text }],
+    }),
 
-  add(text) {
-    this.assign({
-      list: [...this.state.list, { id: nextId(this.state.list), text }],
-    });
-  }
-
-  remove(id) {
-    this.assign({
-      list: this.state.list.filter(todo => todo.id !== id),
-    });
-  }
-}
+    remove: (state, id) => ({
+      ...state,
+      list: state.list.filter(todo => todo.id !== id),
+    }),
+  },
+});

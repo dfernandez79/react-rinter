@@ -1,30 +1,28 @@
 import React from 'react';
 import { render } from 'react-dom';
-import DefaultController, { debug } from 'rinter';
+import { controller, debug } from 'rinter';
 
 import { Provider, Consumer } from '../../src';
 
-export default class CounterController extends DefaultController {
-  increment() {
-    this.assign({ count: this.state.count + 1 });
-  }
+const createCounter = controller({
+  initialState: 0,
+  mutators: {
+    increment: state => state + 1,
+    decrement: state => state - 1,
+  },
+});
 
-  decrement() {
-    this.assign({ count: this.state.count - 1 });
-  }
-}
-
-const counter = debug(new CounterController({ count: 0 }));
+const counter = debug(createCounter());
 
 const App = () => (
   <Provider controller={counter}>
     <Consumer>
       {(state, controller) => (
         <div>
-          Clicked: {state.count} times
+          Clicked: {state} times
           <div>
-            <button onClick={() => controller.increment()}>+</button>
-            <button onClick={() => controller.decrement()}>-</button>
+            <button onClick={controller.increment}>+</button>
+            <button onClick={controller.decrement}>-</button>
           </div>
         </div>
       )}
