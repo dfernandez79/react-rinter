@@ -55,6 +55,7 @@
     "release": "npm-run-all clean lint build release:np",
     "release:np": "np",
     "serve:counter": "parcel serve examples/counter/index.html",
-    "serve:todo": "parcel serve examples/todo/index.html"
+    "serve:todo": "parcel serve examples/todo/index.html",
+    "serve:numbers": "parcel serve examples/numbers/index.html"
   }
 }

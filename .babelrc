@@ -5,7 +5,7 @@
       {
         "targets": {
           "browsers": [
-            "last 2 Chrome versions",
+            "Chrome > 55",
             "Safari >= 10.1",
             "Edge >= 16",
             "Firefox > 52"

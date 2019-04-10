@@ -4,11 +4,13 @@ import { controller, debug } from 'rinter';
 
 import { Provider, Consumer } from '../../src';
 
+import './counter.css';
+
 const createCounter = controller({
   initialState: 0,
   mutators: {
     increment: state => state + 1,
-    decrement: state => state - 1,
+    decrement: state => (state > 1 ? state - 1 : 0),
   },
 });
 
@@ -17,12 +19,18 @@ const counter = debug(createCounter());
 const App = () => (
   <Provider controller={counter}>
     <Consumer>
-      {(state, controller) => (
-        <div>
-          Clicked: {state} times
-          <div>
-            <button onClick={controller.increment}>+</button>
-            <button onClick={controller.decrement}>-</button>
+      {(count, controller) => (
+        <div className="main">
+          <div className="container">
+            <div className="bigNumber">{count}</div>
+            <div className="buttonContainer">
+              <button className="button" onClick={controller.increment}>
+                ▲
+              </button>
+              <button className="button" onClick={controller.decrement}>
+                ▼
+              </button>
+            </div>
           </div>
         </div>
       )}
