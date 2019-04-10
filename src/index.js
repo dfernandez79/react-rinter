@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import { createSubscription } from 'create-subscription';
 
 const Context = React.createContext();
@@ -15,6 +17,16 @@ export const Provider = ({ controller, children }) => (
   <Context.Provider value={controller}>{children}</Context.Provider>
 );
 
+Provider.propTypes = {
+  controller: PropTypes.shape({
+    state: PropTypes.any,
+    changes: PropTypes.shape({
+      subscribe: PropTypes.func,
+    }),
+  }),
+  children: PropTypes.node,
+};
+
 export const Consumer = ({ children }) => (
   <Context.Consumer>
     {controller => (
@@ -24,3 +36,7 @@ export const Consumer = ({ children }) => (
     )}
   </Context.Consumer>
 );
+
+Consumer.propTypes = {
+  children: PropTypes.func,
+};
