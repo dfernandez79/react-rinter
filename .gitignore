@@ -1,3 +1,9 @@
 node_modules/
 **/dist/
 **/.cache/
+lib/
+lib-esm/
+.nyc_output/
+coverage/
+*.tgz
+*.log

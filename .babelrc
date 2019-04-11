@@ -12,6 +12,18 @@
           ]
         }
       }
-    ]
-  ]
+    ],
+    "@babel/preset-react"
+  ],
+  "ignore": ["src/**/*.test.js"],
+  "env": {
+    "esm": {
+      "presets": [
+        [
+          "@babel/preset-env",
+          { "modules": false, "targets": { "esmodules": true } }
+        ]
+      ]
+    }
+  }
 }

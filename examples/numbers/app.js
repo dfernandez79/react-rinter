@@ -1,14 +1,13 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { debug } from 'rinter';
 
 import { Provider } from '../../src';
 
 import { createController } from './controller';
-import ErrorMessage from './error-message';
-import NumberFacts from './number-facts';
+import ErrorMessage from './ErrorMessage';
+import NumberFacts from './NumberFacts';
 
-const numbers = debug(createController(), debug.SILENT);
+const numbers = createController();
 
 const App = () => (
   <Provider controller={numbers}>

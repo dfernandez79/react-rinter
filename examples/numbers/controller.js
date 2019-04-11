@@ -1,4 +1,4 @@
-import { controller } from 'rinter';
+import controller from 'rinter';
 import defaultNumbersService from './service';
 
 export const Status = {

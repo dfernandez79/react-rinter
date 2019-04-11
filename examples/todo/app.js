@@ -2,32 +2,30 @@
 import React from 'react';
 import { render } from 'react-dom';
 
-import { Provider, Consumer } from '../../src';
+import { Subscription } from '../../src';
 
 import TodoController from '.';
 
 const App = ({ controller }) => (
-  <Provider controller={controller}>
-    <Consumer>
-      {({ draft, list }, controller) => (
+  <Subscription source={controller}>
+    {({ draft, list }, controller) => (
+      <div>
         <div>
-          <div>
-            <input
-              value={draft}
-              onChange={evt => controller.changeDraft(evt.target.value)}
-            />
-            <button onClick={() => controller.add(draft)}>Add</button>
-          </div>
-          {list.map(todo => (
-            <div key={todo.id}>
-              {todo.text}{' '}
-              <button onClick={() => controller.remove(todo.id)}>Remove</button>
-            </div>
-          ))}
+          <input
+            value={draft}
+            onChange={evt => controller.changeDraft(evt.target.value)}
+          />
+          <button onClick={() => controller.add(draft)}>Add</button>
         </div>
-      )}
-    </Consumer>
-  </Provider>
+        {list.map(todo => (
+          <div key={todo.id}>
+            {todo.text}{' '}
+            <button onClick={() => controller.remove(todo.id)}>Remove</button>
+          </div>
+        ))}
+      </div>
+    )}
+  </Subscription>
 );
 
 render(
