@@ -15,7 +15,7 @@
     ],
     "@babel/preset-react"
   ],
-  "ignore": ["src/**/*.test.js"],
+  "ignore": ["src/**/*.test.js", "src/setup-virtualdom.js"],
   "env": {
     "esm": {
       "presets": [

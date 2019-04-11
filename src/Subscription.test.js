@@ -1,11 +1,12 @@
 import test from 'ava';
 
-import { configure, shallow } from 'enzyme';
+import { configure, shallow, mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 
 import React from 'react';
 import controller from 'rinter';
 
+import './setup-virtualdom';
 import { Subscription } from '.';
 
 configure({ adapter: new Adapter() });
@@ -33,4 +34,20 @@ test('react to controller changes', t => {
   expected = shallow(<div>A new message</div>).html();
   actual = wrapper.html();
   t.is(actual, expected);
+});
+
+test('unsubscribe during unmount', t => {
+  const controller = createController();
+  const wrapper = mount(
+    <Subscription source={controller}>
+      {state => <div>{state.message}</div>}
+    </Subscription>
+  );
+  t.is('<div>It Worked!</div>', wrapper.html());
+
+  wrapper.unmount();
+
+  controller.updateMessage();
+  wrapper.mount();
+  t.is('<div>A new message</div>', wrapper.html());
 });
