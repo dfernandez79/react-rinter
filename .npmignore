@@ -1,0 +1,28 @@
+# Sources
+src/
+
+# Docs
+docs/
+
+# Test
+*.test.js
+
+# Node
+node_modules/
+*.lock
+
+# Log files
+*.log
+npm-debug.log*
+
+# Mac
+.DS_Store
+
+# Other
+*.tgz
+.nyc_output/
+coverage/
+.prettierrc
+.vscode/
+.babelrc
+.editorconfig
