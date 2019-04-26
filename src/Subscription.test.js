@@ -1,53 +1,72 @@
-import test from 'ava';
-
-import { configure, shallow, mount } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-
 import React from 'react';
 import controller from 'rinter';
+import { render, cleanup } from 'react-testing-library';
+import { filter } from 'rxjs/operators';
 
-import './setup-virtualdom';
 import { Subscription } from '.';
-
-configure({ adapter: new Adapter() });
 
 const createController = controller({
   initialState: { message: 'It Worked!' },
   mutators: {
-    updateMessage: () => ({ message: 'A new message' }),
+    updateMessage: (state, message = 'A new message') => ({ message }),
   },
 });
 
-test('react to controller changes', t => {
+afterEach(cleanup);
+
+test('react to controller changes', () => {
   const controller = createController();
-  const wrapper = shallow(
+
+  const { getByTestId } = render(
     <Subscription source={controller}>
-      {state => <div>{state.message}</div>}
+      {state => <div data-testid="test">{state.message}</div>}
     </Subscription>
   );
-  let expected = shallow(<div>It Worked!</div>).html();
-  let actual = wrapper.html();
-  t.is(actual, expected);
 
+  expect(getByTestId('test').innerHTML).toBe('It Worked!');
   controller.updateMessage();
-
-  expected = shallow(<div>A new message</div>).html();
-  actual = wrapper.html();
-  t.is(actual, expected);
+  expect(getByTestId('test').innerHTML).toBe('A new message');
 });
 
-test('unsubscribe during unmount', t => {
-  const controller = createController();
-  const wrapper = mount(
+test('unsubscribe during unmount', () => {
+  const mockUnsubscribe = jest.fn();
+
+  const controller = {
+    state: 'Test',
+    changes: {
+      subscribe: jest.fn(() => ({ unsubscribe: mockUnsubscribe })),
+    },
+  };
+
+  const { unmount } = render(
     <Subscription source={controller}>
       {state => <div>{state.message}</div>}
     </Subscription>
   );
-  t.is('<div>It Worked!</div>', wrapper.html());
 
-  wrapper.unmount();
+  expect(controller.changes.subscribe.mock.calls.length).toBe(1);
+  expect(mockUnsubscribe.mock.calls.length).toBe(0);
 
-  controller.updateMessage();
-  wrapper.mount();
-  t.is('<div>A new message</div>', wrapper.html());
+  unmount();
+
+  expect(mockUnsubscribe.mock.calls.length).toBe(1);
+});
+
+test('filter state changes using pipe', () => {
+  const controller = createController();
+
+  const { getByTestId } = render(
+    <Subscription
+      source={controller}
+      pipeChanges={[filter(s => s.message === 'Pass')]}
+    >
+      {state => <div data-testid="test">{state.message}</div>}
+    </Subscription>
+  );
+
+  expect(getByTestId('test').innerHTML).toBe('It Worked!');
+  controller.updateMessage('Something');
+  expect(getByTestId('test').innerHTML).toBe('It Worked!');
+  controller.updateMessage('Pass');
+  expect(getByTestId('test').innerHTML).toBe('Pass');
 });

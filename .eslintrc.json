@@ -14,5 +14,14 @@
     "linebreak-style": ["error", "unix"],
     "quotes": ["error", "single"],
     "semi": ["error", "always"]
-  }
+  },
+  "overrides": [
+    {
+      "files": "src/**/*.test.js",
+      "env": {
+        "jest": true
+      },
+      "plugins": ["jest"]
+    }
+  ]
 }

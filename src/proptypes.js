@@ -8,3 +8,5 @@ export const controllerPropType = PropTypes.shape({
 });
 
 export const childrenPropType = PropTypes.func.isRequired;
+
+export const pipePropType = PropTypes.arrayOf(PropTypes.func);

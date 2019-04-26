@@ -15,15 +15,18 @@
     ],
     "@babel/preset-react"
   ],
-  "ignore": ["src/**/*.test.js", "src/setup-virtualdom.js"],
   "env": {
+    "lib": {
+      "ignore": ["src/**/*.test.js"]
+    },
     "esm": {
       "presets": [
         [
           "@babel/preset-env",
           { "modules": false, "targets": { "esmodules": true } }
         ]
-      ]
+      ],
+      "ignore": ["src/**/*.test.js"]
     }
   }
 }

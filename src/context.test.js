@@ -1,14 +1,8 @@
-import test from 'ava';
-
-import { configure, shallow } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-
 import React from 'react';
 import controller from 'rinter';
+import { render, cleanup } from 'react-testing-library';
 
 import { Provider, Consumer } from '.';
-
-configure({ adapter: new Adapter() });
 
 const createController = controller({
   initialState: { message: 'It Worked!' },
@@ -17,64 +11,54 @@ const createController = controller({
   },
 });
 
-test('multiple consumers', t => {
+afterEach(cleanup);
+
+test('multiple consumers', () => {
   const controller = createController();
 
-  const expected = shallow(
-    <div>
-      <div>It Worked!</div>
-      <div>It Worked!</div>
-      <div>It Worked!</div>
-    </div>
-  ).html();
-
-  const actual = shallow(
+  const { getByTestId } = render(
     <Provider controller={controller}>
       <div>
-        <Consumer>{state => <div>{state.message}</div>}</Consumer>
-        <Consumer>{state => <div>{state.message}</div>}</Consumer>
-        <Consumer>{state => <div>{state.message}</div>}</Consumer>
-      </div>
-    </Provider>
-  ).html();
-
-  t.is(actual, expected);
-});
-
-test('update multiple consumers', t => {
-  const controller = createController();
-
-  let expected = shallow(
-    <div>
-      <div>It Worked!</div>
-      <div>It Worked!</div>
-      <div>It Worked!</div>
-    </div>
-  ).html();
-
-  const wrapper = shallow(
-    <Provider controller={controller}>
-      <div>
-        <Consumer>{state => <div>{state.message}</div>}</Consumer>
-        <Consumer>{state => <div>{state.message}</div>}</Consumer>
-        <Consumer>{state => <div>{state.message}</div>}</Consumer>
+        <Consumer>
+          {state => <div data-testid="1">{state.message}</div>}
+        </Consumer>
+        <Consumer>
+          {state => <div data-testid="2">{state.message}</div>}
+        </Consumer>
+        <Consumer>
+          {state => <div data-testid="3">{state.message}</div>}
+        </Consumer>
       </div>
     </Provider>
   );
 
-  let actual = wrapper.html();
+  expect(getByTestId('1').innerHTML).toBe('It Worked!');
+  expect(getByTestId('2').innerHTML).toBe('It Worked!');
+  expect(getByTestId('3').innerHTML).toBe('It Worked!');
+});
 
-  t.is(actual, expected);
+test('update multiple consumers', () => {
+  const controller = createController();
 
-  expected = shallow(
-    <div>
-      <div>A new message</div>
-      <div>A new message</div>
-      <div>A new message</div>
-    </div>
-  ).html();
+  const { getByTestId } = render(
+    <Provider controller={controller}>
+      <div>
+        <Consumer>
+          {state => <div data-testid="1">{state.message}</div>}
+        </Consumer>
+        <Consumer>
+          {state => <div data-testid="2">{state.message}</div>}
+        </Consumer>
+        <Consumer>
+          {state => <div data-testid="3">{state.message}</div>}
+        </Consumer>
+      </div>
+    </Provider>
+  );
 
   controller.updateMessage();
-  actual = wrapper.html();
-  t.is(actual, expected);
+
+  expect(getByTestId('1').innerHTML).toBe('A new message');
+  expect(getByTestId('2').innerHTML).toBe('A new message');
+  expect(getByTestId('3').innerHTML).toBe('A new message');
 });
