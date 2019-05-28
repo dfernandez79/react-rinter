@@ -1,2 +1,3 @@
-export { Provider, Consumer } from './context';
-export { default as Subscription } from './Subscription';
+export { default as ControllerContext } from './ControllerContext';
+export { default as StateChangeSubscription } from './StateChangeSubscription';
+export * from './hoc';

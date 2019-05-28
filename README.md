@@ -1,29 +1,74 @@
 # React Rinter
 
-This package exports React components to do unicast or multicast subscriptions
-to a [Rinter]'s Controller changes.
+Components and hooks to use [Rinter] with React.
 
 ## Usage
 
-### Single Consumer (unicast)
+- **Create the controller** that you'll like to use in your app.
+- Optionally **use `ControllerContext`** (a [React Context]) to provide or
+  consume the controller.
+- **Subscribe to changes** using `StateChangeSubscription`.
 
-Add a `Subscription` element to the rendering tree, and pass the controller to
-it (usually done in the application root).
-
-The `children` property is not a React element but a function that receives the
-current state and the controller (see [Render Prop]):
+### Create the controller
 
 ```js
-import { Subscription } from 'react-rinter';
+import controller from 'rinter';
+
+const createController = controller({
+  initialState: [],
+  mutators: {
+    add: (state, text) => [...state, { text }],
+  },
+});
+
+const todoList = createController();
+```
+
+### Use `ControllerContext``
+
+```js
+import { ControllerContext } from 'react-rinter';
+
+const App = () => (
+  <ControllerContext.Provider value={todoList}>
+    <TodoListApp />
+  </ControllerContext.Provider>
+);
+```
+
+```js
+import { ControllerContext } from 'react-rinter';
+
+const MyComponent = () => (
+  <ControllerContext.Consumer>
+    {controller => <InnerComponent controller={controller} />}
+  </ControllerContext.Consumer>
+);
+```
+
+### Subscribe to changes
+
+### Multiple Consumers (multicast)
+
+```js
+import { Provider, Consumer } from 'rinter';
 
 // myController is a Rinter controller object
 
-<Subscription controller={myController}>
-  {(state, controller) => <div>{/* Do something to display state */}</div>}
-</Subscription>;
+<Provider controller={controller}>
+  <div>
+    <Consumer>
+      {state => <div>{/* Do something to display state */}</div>}
+    </Consumer>
+    <Consumer>
+      {state => <div>{/* Do something to display state */}</div>}
+    </Consumer>
+    <Consumer>
+      {state => <div>{/* Do something to display state */}</div>}
+    </Consumer>
+  </div>
+</Provider>;
 ```
-
-### Multiple Consumers (multicast)
 
 ## License
 

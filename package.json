@@ -19,8 +19,8 @@
     "rinter"
   ],
   "peerDependencies": {
-    "react": "^16.3.0",
-    "rxjs": "6.x"
+    "react": "^16.8.6",
+    "rxjs": "6.5.2"
   },
   "dependencies": {
     "create-subscription": "^16.3.0",
@@ -57,8 +57,8 @@
     "lint": "eslint src",
     "release": "npm-run-all clean lint build release:np",
     "release:np": "np",
-    "serve:counter": "parcel serve examples/counter/index.html",
-    "serve:todo": "parcel serve examples/todo/index.html",
+    "examples:counter": "parcel serve examples/counter/index.html",
+    "examples:todo": "parcel serve examples/todo/index.html",
     "serve:numbers": "parcel serve examples/numbers/index.html"
   }
 }

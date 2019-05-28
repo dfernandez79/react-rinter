@@ -1,26 +1,17 @@
-import { maxBy, isNumber } from 'lodash';
-import { controller } from 'rinter';
+import React from 'react';
+import { render } from 'react-dom';
+import { debug } from 'rinter';
 
-const nextId = list => {
-  const maxIdItem = maxBy(list, 'id');
-  return maxIdItem !== undefined && isNumber(maxIdItem.id)
-    ? maxIdItem.id + 1
-    : 1;
-};
+import { ControllerContext } from '../../src';
 
-export default controller({
-  initialState: { draft: '', list: [] },
-  mutators: {
-    changeDraft: (state, text) => ({ ...state, draft: text }),
+import createController from './controller';
+import App from './components/App';
 
-    add: (state, text) => ({
-      ...state,
-      list: [...state.list, { id: nextId(state.list), text }],
-    }),
+const controller = debug(createController());
 
-    remove: (state, id) => ({
-      ...state,
-      list: state.list.filter(todo => todo.id !== id),
-    }),
-  },
-});
+render(
+  <ControllerContext.Provider value={controller}>
+    <App />
+  </ControllerContext.Provider>,
+  document.getElementById('app')
+);

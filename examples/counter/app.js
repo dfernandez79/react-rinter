@@ -2,39 +2,55 @@ import React from 'react';
 import { render } from 'react-dom';
 import { controller } from 'rinter';
 
-import { Subscription } from '../../src';
-
-import './counter.css';
+import { StateChangeSubscription } from '../../src';
 
 const createCounter = controller({
   initialState: 0,
 
   mutators: {
     increment: state => state + 1,
-    decrement: state => (state > 1 ? state - 1 : 0),
+    decrement: state => state - 1,
+  },
+
+  methods: {
+    incrementIfOdd() {
+      if (this.state % 2 !== 0) {
+        this.increment();
+      }
+    },
+
+    incrementAsync() {
+      setTimeout(() => {
+        this.increment();
+      }, 1000);
+    },
   },
 });
 
 const counter = createCounter();
 
 const App = () => (
-  <Subscription source={counter}>
-    {(count, controller) => (
-      <div className="main">
-        <div className="container">
-          <div className="bigNumber">{count}</div>
-          <div className="buttonContainer">
-            <button className="button" onClick={controller.increment}>
-              ▲
-            </button>
-            <button className="button" onClick={controller.decrement}>
-              ▼
-            </button>
-          </div>
-        </div>
+  <StateChangeSubscription source={counter}>
+    {count => (
+      <div>
+        <p>
+          Clicked: <span id="value">{count}</span> times
+          <button id="increment" onClick={counter.increment}>
+            +
+          </button>
+          <button id="decrement" onClick={counter.decrement}>
+            -
+          </button>
+          <button id="incrementIfOdd" onClick={counter.incrementIfOdd}>
+            Increment if odd
+          </button>
+          <button id="incrementAsync" onClick={counter.incrementAsync}>
+            Increment async
+          </button>
+        </p>
       </div>
     )}
-  </Subscription>
+  </StateChangeSubscription>
 );
 
 render(<App />, document.getElementById('app'));

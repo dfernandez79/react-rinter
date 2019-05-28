@@ -1,14 +1,17 @@
 import React from 'react';
 import controller from 'rinter';
 import { render, cleanup } from 'react-testing-library';
-import { filter } from 'rxjs/operators';
 
-import { Subscription } from '.';
+import { StateChangeSubscription } from '.';
 
 const createController = controller({
-  initialState: { message: 'It Worked!' },
+  initialState: { message: 'It Worked!', other: 'Other Message' },
   mutators: {
-    updateMessage: (state, message = 'A new message') => ({ message }),
+    updateMessage: (state, message = 'A new message') => ({
+      ...state,
+      message,
+    }),
+    updateOther: (state, other) => ({ ...state, other }),
   },
 });
 
@@ -18,9 +21,9 @@ test('react to controller changes', () => {
   const controller = createController();
 
   const { getByTestId } = render(
-    <Subscription source={controller}>
+    <StateChangeSubscription source={controller}>
       {state => <div data-testid="test">{state.message}</div>}
-    </Subscription>
+    </StateChangeSubscription>
   );
 
   expect(getByTestId('test').innerHTML).toBe('It Worked!');
@@ -35,13 +38,16 @@ test('unsubscribe during unmount', () => {
     state: 'Test',
     changes: {
       subscribe: jest.fn(() => ({ unsubscribe: mockUnsubscribe })),
+      pipe() {
+        return this;
+      },
     },
   };
 
   const { unmount } = render(
-    <Subscription source={controller}>
+    <StateChangeSubscription source={controller}>
       {state => <div>{state.message}</div>}
-    </Subscription>
+    </StateChangeSubscription>
   );
 
   expect(controller.changes.subscribe.mock.calls.length).toBe(1);
@@ -52,20 +58,17 @@ test('unsubscribe during unmount', () => {
   expect(mockUnsubscribe.mock.calls.length).toBe(1);
 });
 
-test('filter state changes using pipe', () => {
+test('map state changes', () => {
   const controller = createController();
 
   const { getByTestId } = render(
-    <Subscription
-      source={controller}
-      pipeChanges={[filter(s => s.message === 'Pass')]}
-    >
-      {state => <div data-testid="test">{state.message}</div>}
-    </Subscription>
+    <StateChangeSubscription source={controller} mapState={s => s.message}>
+      {state => <div data-testid="test">{state}</div>}
+    </StateChangeSubscription>
   );
 
   expect(getByTestId('test').innerHTML).toBe('It Worked!');
-  controller.updateMessage('Something');
+  controller.updateOther('Something');
   expect(getByTestId('test').innerHTML).toBe('It Worked!');
   controller.updateMessage('Pass');
   expect(getByTestId('test').innerHTML).toBe('Pass');
